@@ -13,6 +13,7 @@
     "should": "^4.6.5"
   },
   "dependencies": {
-    "aws-sdk": "^2.1.8"
+    "aws-sdk": "^2.1.8",
+    "extend": "^2.0.0"
   }
 }
