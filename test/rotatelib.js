@@ -1,4 +1,5 @@
 var should = require('should'),
+  moment = require('moment'),
   rotatelib = require('../index.js'),
   criteria = require('../lib/criteria.js');
 
@@ -39,6 +40,22 @@ describe('rotatelib', function() {
         });
 
         items.should.have.length(0);
+      });
+
+      it('works with a moment', function() {
+        var items = rotatelib.list({
+          items: [
+            'example.txt',
+            'README.md',
+            'file20141231.txt',
+            'file20150101.txt'
+          ],
+          after: moment('2014-01-01')
+        });
+
+        items.should.have.length(2);
+        items.should.containEql('file20141231.txt');
+        items.should.containEql('file20150101.txt');
       });
     });
 
