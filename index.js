@@ -1,5 +1,6 @@
 var extend = require('extend'),
-  criteria = require('./lib/criteria.js');
+  criteria = require('./lib/criteria.js'),
+  handlers = require('./lib/handlers.js');
 
 var rotatelib = {
   /**
@@ -25,6 +26,17 @@ var rotatelib = {
     return criteriaItems;
   },
 
+  getHandler: function(params) {
+    for (var handler in handlers) {
+      if (handlers.hasOwnProperty(handler)) {
+        var thisHandler = handlers[handler];
+        if (thisHandler.applies(params)) {
+          return thisHandler;
+        }
+      }
+    }
+  },
+
   /**
    * List out items that match the criteria.
    */
@@ -40,9 +52,15 @@ var rotatelib = {
           items.push(item);
         }
       });
+
+      return items;
     }
 
-    return items;
+    var handler = rotatelib.getHandler(params);
+    if (handler) {
+      handler.rotatelib = this;
+      return handler.list(params);
+    }
   },
 
   /**
@@ -69,6 +87,15 @@ var rotatelib = {
       }
     }
     return true;
+  },
+
+  /**
+   * Remove items.
+   */
+  removeItems: function(items, params) {
+    // figure out the handler for this case
+    var handler = rotatelib.getHandler(params);
+    return handler.removeItems(items, params);
   }
 
 };

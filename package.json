@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "mocha": "^2.1.0",
+    "rimraf": "^2.2.8",
     "should": "^4.6.5"
   },
   "dependencies": {

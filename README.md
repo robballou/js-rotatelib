@@ -7,9 +7,13 @@ This is a JavaScript port of [rotatelib](https://github.com/robballou/rotatelib)
 ```javascript
 var rotatelib = require('rotatelib');
 
-var items = rotatelib.list({
+// list the files within 'backups' directory that are dated before 2014-01-01
+rotatelib.list({
   directory: 'backups',
   before: '2014-01-01'
+})
+.once('done', function(items) {
+  // do stuff here!
 });
 
 ```
