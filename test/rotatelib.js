@@ -6,9 +6,74 @@ describe('rotatelib', function() {
 
   describe('criteria', function() {
 
+    describe('after', function() {
+      it('is applicable', function() {
+        criteria.after.applies({after: '2015-01-01'}).should.be.ok;
+      });
+
+      it('returns items before a date', function() {
+        var items = rotatelib.list({
+          items: [
+            'example.txt',
+            'README.md',
+            'file20141231.txt',
+            'file20150101.txt'
+          ],
+          after: '2014-01-01'
+        });
+
+        items.should.have.length(2);
+        items.should.containEql('file20141231.txt');
+        items.should.containEql('file20150101.txt');
+      });
+
+      it('returns no items after a date when nothing matches', function() {
+        var items = rotatelib.list({
+          items: [
+            'example.txt',
+            'README.md',
+            'file20141231.txt',
+            'file20150101.txt'
+          ],
+          after: '2015-02-01'
+        });
+
+        items.should.have.length(0);
+      });
+    });
+
     describe('before', function() {
       it('is applicable', function() {
         criteria.before.applies({before: '2015-01-01'}).should.be.ok;
+      });
+
+      it('returns items before a date', function() {
+        var items = rotatelib.list({
+          items: [
+            'example.txt',
+            'README.md',
+            'file20141231.txt',
+            'file20150101.txt'
+          ],
+          before: '2015-01-01'
+        });
+
+        items.should.have.length(1);
+        items.should.containEql('file20141231.txt');
+      });
+
+      it('returns no items before a date when nothing matches', function() {
+        var items = rotatelib.list({
+          items: [
+            'example.txt',
+            'README.md',
+            'file20141231.txt',
+            'file20150101.txt'
+          ],
+          before: '2013-01-01'
+        });
+
+        items.should.have.length(0);
       });
     });
 
