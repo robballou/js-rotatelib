@@ -10,16 +10,33 @@ var rotatelib = {
   },
 
   /**
+   * Figure out the applicable criteria items for this request.
+   */
+  getApplicableCriteria: function(params) {
+    var criteriaItems = [];
+    for (var property in criteria) {
+      if (criteria.hasOwnProperty(property) && property.substr(0, 1) !== '_') {
+        var criteriaItem = criteria[property];
+        if (criteriaItem.applies(params)) {
+          criteriaItems.push(criteriaItem);
+        }
+      }
+    }
+    return criteriaItems;
+  },
+
+  /**
    * List out items that match the criteria.
    */
   list: function(params) {
     var items = [],
-      self = this;
+      self = this,
+      applyCriteria = rotatelib.getApplicableCriteria(params);
 
     // list items from the items param
     if (params.hasOwnProperty('items')) {
       params.items.forEach(function(item) {
-        if (rotatelib.matchesCriteria(item, params)) {
+        if (rotatelib.matchesCriteria(item, params, applyCriteria)) {
           items.push(item);
         }
       });
@@ -39,8 +56,19 @@ var rotatelib = {
   /**
    * Check if the item matches the criteria.
    */
-  matchesCriteria: function(item, params) {
-    return criteria.default.matches(item, params);
+  matchesCriteria: function(item, params, criteria) {
+    if (criteria.length === 0) {
+      console.log('no criteria');
+      return false;
+    }
+
+    for (var i=0, count=criteria.length; i<count; i++) {
+      var result = criteria[i].matches(item, params);
+      if (result === 0) {
+        return false;
+      }
+    }
+    return true;
   }
 
 };
