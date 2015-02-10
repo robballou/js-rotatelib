@@ -14,15 +14,17 @@ var items = rotatelib.list({
 
 ## Criteria
 
-- after (moment or moment parseable string) x
-- before (moment or moment parseable string) x
-- day (int or array of ints)
-- except_day (int or array of ints)
-- except_hour (int or array of ints)
-- except_startswith (string or array of strings)
-- except_year (int or array of ints)
-- has_date (true/false) x
-- hour (int or array of ints)
-- startswith (string or array of strings)
-- pattern (regex)
-- year (int or array of ints)
+A list of criteria that can be applied.
+
+- `after` (moment or moment parseable string) **implemented**
+- `before` (moment or moment parseable string) **implemented**
+- `day` (int or array of ints) **implemented**
+- `except_day` (int or array of ints) **implemented**
+- `except_hour` (int or array of ints)
+- `except_startswith` (string or array of strings)
+- `except_year` (int or array of ints)
+- `has_date` (true/false) **implemented**
+- `hour` (int or array of ints)
+- `startswith` (string or array of strings)
+- `pattern` (regex)
+- `year` (int or array of ints)

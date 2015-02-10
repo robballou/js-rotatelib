@@ -94,6 +94,97 @@ describe('rotatelib', function() {
       });
     });
 
+    describe('day', function() {
+      it('is applicable', function() {
+        criteria.day.applies({day: 1}).should.be.ok;
+        criteria.day.applies({day: [1, 15]}).should.be.ok;
+      });
+
+      it('returns items with a day', function() {
+        var items = rotatelib.list({
+          items: [
+            'example.txt',
+            'README.md',
+            'file20141231.txt',
+            'file20150101.txt'
+          ],
+          day: [1, 5]
+        });
+
+        items.should.have.length(1);
+        items.should.containEql('file20150101.txt');
+      });
+
+      it('returns no items when nothing matches', function() {
+        var items = rotatelib.list({
+          items: [
+            'example.txt',
+            'README.md',
+            'file20141231.txt',
+            'file20150101.txt'
+          ],
+          day: 3
+        });
+
+        items.should.have.length(0);
+      });
+    });
+
+    describe('except_day', function() {
+      it('is applicable', function() {
+        criteria.except_day.applies({except_day: 1}).should.be.ok;
+        criteria.except_day.applies({except_day: [1, 15]}).should.be.ok;
+      });
+
+      it('returns items except with a day', function() {
+        var items = rotatelib.list({
+          items: [
+            'example.txt',
+            'README.md',
+            'file20141231.txt',
+            'file20150101.txt'
+          ],
+          except_day: [1, 5]
+        });
+
+        items.should.have.length(1);
+        items.should.containEql('file20141231.txt');
+      });
+
+      it('returns no items when nothing matches', function() {
+        var items = rotatelib.list({
+          items: [
+            'example.txt',
+            'README.md',
+            'file20141231.txt',
+            'file20150101.txt'
+          ],
+          except_day: [1, 31]
+        });
+
+        items.should.have.length(0);
+      });
+    });
+
+    describe('before and day', function() {
+      it('returns items correctly', function() {
+        var items = rotatelib.list({
+          items: [
+            'example.txt',
+            'README.md',
+            'file20141231.txt',
+            'file20141201.txt',
+            'file20150101.txt'
+          ],
+          day: [1, 5],
+          before: '2015-01-01',
+        });
+
+        items.should.have.length(1);
+        items.should.containEql('file20141201.txt');
+      });
+    });
+
     describe('has_date', function() {
 
       it('is applicable', function() {
