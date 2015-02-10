@@ -28,7 +28,7 @@ describe('rotatelib', function() {
 
         // strings with names in them
         {string: 'test-2009-06-29T1430-0700.bz2', answer: '2009-06-29 14:30:00', format: 'YYYY-MM-DD HH:mm:ss'},
-        {string: 'test-2009-06-29T14-0700.bz2', answer: '2009-06-29 14:30:00', format: 'YYYY-MM-DD HH:mm:ss'},
+        {string: 'test-2009-06-29T14-0700.bz2', answer: '2009-06-29 14:00:00', format: 'YYYY-MM-DD HH:mm:ss'},
         {string: 'test-20090629.bz2', answer: '2009-06-29'},
         {string: 'test-200906290130.bz2', answer: '2009-06-29 01:30:00', format: 'YYYY-MM-DD HH:mm:ss'}
       ];
@@ -36,7 +36,8 @@ describe('rotatelib', function() {
       validDates.forEach(function(date) {
         it('parses date ' + date.string, function() {
           var parsed = criteria.has_date.parseDate(date.string);
-          parsed.should.be.ok;
+          parsed.should.not.be.false;
+          parsed.should.be.an.object;
           parsed.date.isValid().should.be.ok;
 
           var format = 'YYYY-MM-DD';
@@ -61,7 +62,7 @@ describe('rotatelib', function() {
             'example.txt',
             'README.md',
             'file20141231.txt',
-            'file2014.txt'
+            'file20150101.txt'
           ]
         });
 
@@ -74,13 +75,13 @@ describe('rotatelib', function() {
             'example.txt',
             'README.md',
             'file20141231.txt',
-            'file2014.txt'
+            'file20150101.txt'
           ],
           has_date: true
         });
 
         items.should.have.length(2);
-        items.should.containEql('file2014.txt');
+        items.should.containEql('file20150101.txt');
         items.should.not.containEql('example.txt');
       });
     });
