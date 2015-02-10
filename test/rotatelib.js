@@ -133,6 +133,21 @@ describe('rotatelib', function() {
       it('does not parse invalid things', function() {
         criteria.has_date.parseDate('asdf').should.not.be.ok;
       });
+
+      it('handles has_date=false', function() {
+        var items = rotatelib.list({
+          items: [
+            'example.txt',
+            'README.md',
+            'file20141231.txt',
+            'file20150101.txt'
+          ],
+          has_date: false
+        });
+
+        items.should.have.length(2);
+        items.should.containEql('README.md');
+      });
     });
   });
 
