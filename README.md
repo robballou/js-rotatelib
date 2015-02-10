@@ -1,5 +1,7 @@
 # Rotatelib
 
+<img src="https://travis-ci.org/robballou/js-rotatelib.svg" alt="Build status" />
+
 This is a JavaScript port of [rotatelib](https://github.com/robballou/rotatelib).
 
 ```javascript
