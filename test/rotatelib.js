@@ -12,7 +12,11 @@ describe('rotatelib', function() {
       });
     });
 
-    describe('HasDateMixin', function() {
+    describe('has_date', function() {
+
+      it('is applicable', function() {
+        criteria.has_date.applies({has_date: true}).should.be.ok;
+      });
 
       var validDates = [
         // just date strings
@@ -31,7 +35,7 @@ describe('rotatelib', function() {
 
       validDates.forEach(function(date) {
         it('parses date ' + date.string, function() {
-          var parsed = criteria._mixins.HasDateMixin.parseDate(date.string);
+          var parsed = criteria.has_date.parseDate(date.string);
           parsed.should.be.ok;
           parsed.date.isValid().should.be.ok;
 
@@ -44,7 +48,7 @@ describe('rotatelib', function() {
       });
 
       it('does not parse invalid things', function() {
-        criteria._mixins.HasDateMixin.parseDate('asdf').should.not.be.ok;
+        criteria.has_date.parseDate('asdf').should.not.be.ok;
       });
     });
   });
@@ -62,9 +66,24 @@ describe('rotatelib', function() {
         });
 
         items.should.have.length(4);
-        items.should.containEql('file20141231.txt');
+      });
+
+      it('returns things with dates with has_date', function() {
+        var items = rotatelib.list({
+          items: [
+            'example.txt',
+            'README.md',
+            'file20141231.txt',
+            'file2014.txt'
+          ],
+          has_date: true
+        });
+
+        items.should.have.length(2);
         items.should.containEql('file2014.txt');
+        items.should.not.containEql('example.txt');
       });
     });
+
   });
 });

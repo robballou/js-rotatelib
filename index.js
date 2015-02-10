@@ -18,6 +18,7 @@ var rotatelib = {
       if (criteria.hasOwnProperty(property) && property.substr(0, 1) !== '_') {
         var criteriaItem = criteria[property];
         if (criteriaItem.applies(params)) {
+          console.log(property);
           criteriaItems.push(criteriaItem);
         }
       }
