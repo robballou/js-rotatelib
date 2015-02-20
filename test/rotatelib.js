@@ -166,6 +166,27 @@ describe('rotatelib', function() {
       });
     });
 
+    describe('except_hour', function() {
+      it('is applicable', function() {
+        criteria.except_hour.applies({except_hour: 1}).should.be.ok;
+        criteria.except_hour.applies({except_hour: [1, 13]}).should.be.ok;
+      });
+    });
+
+    describe('except_startswith', function() {
+      it('is applicable', function() {
+        criteria.except_startswith.applies({except_startswith: 'test'}).should.be.ok;
+        criteria.except_startswith.applies({except_startswith: ['test', 'prod']}).should.be.ok;
+      });
+    });
+
+    describe('except_year', function() {
+      it('is applicable', function() {
+        criteria.except_year.applies({except_year: 2014}).should.be.ok;
+        criteria.except_year.applies({except_year: [2015, 2014]}).should.be.ok;
+      });
+    });
+
     describe('before and day', function() {
       it('returns items correctly', function() {
         var items = rotatelib.list({
@@ -240,9 +261,36 @@ describe('rotatelib', function() {
         items.should.containEql('README.md');
       });
     });
+
+    describe('hour', function() {
+      it('is applicable', function() {
+        criteria.hour.applies({hour: 1}).should.be.ok;
+        criteria.hour.applies({hour: [1, 13]}).should.be.ok;
+      });
+    });
+
+    describe('startswith', function() {
+      it('is applicable', function() {
+        criteria.startswith.applies({startswith: 'test'}).should.be.ok;
+        criteria.startswith.applies({startswith: ['test', 'stage']}).should.be.ok;
+      });
+    });
+
+    describe('pattern', function() {
+      it('is applicable', function() {
+        criteria.pattern.applies({pattern: /^test/}).should.be.ok;
+      });
+    });
+
+    describe('year', function() {
+      it('is applicable', function() {
+        criteria.year.applies({year: 2014}).should.be.ok;
+        criteria.year.applies({year: [2015, 2014]}).should.be.ok;
+      });
+    });
   });
 
-  describe('filesystem', function() {
+  describe('default', function() {
     describe('list()', function() {
       it('returns everything by default', function() {
         var items = rotatelib.list({
