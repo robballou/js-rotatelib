@@ -171,6 +171,20 @@ describe('rotatelib', function() {
         criteria.except_hour.applies({except_hour: 1}).should.be.ok;
         criteria.except_hour.applies({except_hour: [1, 13]}).should.be.ok;
       });
+
+      it('returns items not in this hour', function() {
+        var itemsList = [
+            'example.txt',
+            'README.md',
+            'file20141231013000.txt',
+            'file20150101023000.txt'
+          ];
+        var items = rotatelib.list({items: itemsList, except_hour: 1})
+        items.should.have.length(1);
+        items.should.containEql('file20150101023000.txt');
+        rotatelib.list({items: itemsList, except_hour: [1, 2]}).should.have.length(0);
+      });
+
     });
 
     describe('except_startswith', function() {
@@ -218,6 +232,7 @@ describe('rotatelib', function() {
         {string: '2014-01-20', answer: '2014-01-20'},
         {string: '20140101', answer: '2014-01-01'},
         {string: '20140120', answer: '2014-01-20'},
+        {string: '20140120013000', answer: '2014-01-20 01:30:00', format: 'YYYY-MM-DD HH:mm:ss'},
         {string: '2014-01-20T13:00', answer: '2014-01-20 13:00:00', format: 'YYYY-MM-DD HH:mm:ss'},
 
         // strings with names in them
@@ -266,6 +281,19 @@ describe('rotatelib', function() {
       it('is applicable', function() {
         criteria.hour.applies({hour: 1}).should.be.ok;
         criteria.hour.applies({hour: [1, 13]}).should.be.ok;
+      });
+
+      it('returns items in this hour', function() {
+        var itemsList = [
+            'example.txt',
+            'README.md',
+            'file20141231013000.txt',
+            'file20150101023000.txt'
+          ];
+        var items = rotatelib.list({items: itemsList, hour: 1})
+        items.should.have.length(1);
+        items.should.containEql('file20141231013000.txt');
+        rotatelib.list({items: itemsList, hour: [1, 2]}).should.have.length(2);
       });
     });
 
