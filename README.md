@@ -51,3 +51,12 @@ rotatelib.list({
   except_first: 'day'
 })
 ```
+
+## Project Goals
+
+So why port this to JS?
+
+1. Cause I can :stuck_out_tongue_winking_eye:
+1. I'm interested in trying to have this work with tools like [Gulp](http://gulpjs.com).
+1. Getting into npm is worlds easier than getting into pip.
+1. With `execSync` in 0.12 (and iojs), some of this library makes more sense. Also there are libraries for AWS and probably other things.
