@@ -27,14 +27,14 @@ A list of criteria that can be applied.
 - `before` (moment or moment parseable string) **implemented**
 - `day` (int or array of ints) **implemented**
 - `except_day` (int or array of ints) **implemented**
-- `except_hour` (int or array of ints)
-- `except_startswith` (string or array of strings)
-- `except_year` (int or array of ints)
+- `except_hour` (int or array of ints) **implemented**
+- `except_startswith` (string or array of strings) **implemented**
+- `except_year` (int or array of ints) **implemented**
 - `has_date` (true/false) **implemented**
-- `hour` (int or array of ints)
-- `startswith` (string or array of strings)
+- `hour` (int or array of ints) **implemented**
+- `startswith` (string or array of strings) **implemented**
 - `pattern` (regex)
-- `year` (int or array of ints)
+- `year` (int or array of ints) **implemented**
 
 ## Filters
 
