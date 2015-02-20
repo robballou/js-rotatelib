@@ -192,6 +192,18 @@ describe('rotatelib', function() {
         criteria.except_startswith.applies({except_startswith: 'test'}).should.be.ok;
         criteria.except_startswith.applies({except_startswith: ['test', 'prod']}).should.be.ok;
       });
+
+      it('returns items that do not start with string', function() {
+        var itemsList = [
+            'example.txt',
+            'README.md',
+            'file20141231013000.txt',
+            'file20150101023000.txt'
+          ];
+        var items = rotatelib.list({items: itemsList, except_startswith: 'file'})
+        items.should.have.length(2);
+        items.should.containEql('README.md');
+      });
     });
 
     describe('except_year', function() {
@@ -301,6 +313,18 @@ describe('rotatelib', function() {
       it('is applicable', function() {
         criteria.startswith.applies({startswith: 'test'}).should.be.ok;
         criteria.startswith.applies({startswith: ['test', 'stage']}).should.be.ok;
+      });
+
+      it('returns items that start with string', function() {
+        var itemsList = [
+            'example.txt',
+            'README.md',
+            'file20141231013000.txt',
+            'file20150101023000.txt'
+          ];
+        var items = rotatelib.list({items: itemsList, startswith: 'file'})
+        items.should.have.length(2);
+        items.should.containEql('file20141231013000.txt');
       });
     });
 
