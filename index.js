@@ -95,7 +95,10 @@ var rotatelib = {
   removeItems: function(items, params) {
     // figure out the handler for this case
     var handler = rotatelib.getHandler(params);
-    return handler.removeItems(items, params);
+    if (handler) {
+      handler.rotatelib = this;
+      return handler.removeItems(items, params);
+    }
   }
 
 };
