@@ -323,4 +323,18 @@ describe('rotatelib', function() {
     });
 
   });
+
+  describe('filters', function() {
+    describe('except_first', function() {
+      it('is applicable', function() {
+        false.should.be.ok;
+      });
+    });
+
+    describe('except_last', function() {
+      it('is applicable', function() {
+        false.should.be.ok;
+      });
+    });
+  });
 });
