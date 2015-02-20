@@ -211,6 +211,19 @@ describe('rotatelib', function() {
         criteria.except_year.applies({except_year: 2014}).should.be.ok;
         criteria.except_year.applies({except_year: [2015, 2014]}).should.be.ok;
       });
+
+      it('returns items not in this year', function() {
+        var itemsList = [
+            'example.txt',
+            'README.md',
+            'file20141231013000.txt',
+            'file20150101023000.txt'
+          ];
+        var items = rotatelib.list({items: itemsList, except_year: 2014})
+        items.should.have.length(1);
+        items.should.containEql('file20150101023000.txt');
+        rotatelib.list({items: itemsList, except_year: [2014, 2015]}).should.have.length(0);
+      });
     });
 
     describe('before and day', function() {
@@ -338,6 +351,19 @@ describe('rotatelib', function() {
       it('is applicable', function() {
         criteria.year.applies({year: 2014}).should.be.ok;
         criteria.year.applies({year: [2015, 2014]}).should.be.ok;
+      });
+
+      it('returns items not in this year', function() {
+        var itemsList = [
+            'example.txt',
+            'README.md',
+            'file20141231013000.txt',
+            'file20150101023000.txt'
+          ];
+        var items = rotatelib.list({items: itemsList, year: 2014})
+        items.should.have.length(1);
+        items.should.containEql('file20141231013000.txt');
+        rotatelib.list({items: itemsList, year: [2014, 2015]}).should.have.length(2);
       });
     });
   });
