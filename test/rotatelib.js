@@ -345,6 +345,18 @@ describe('rotatelib', function() {
       it('is applicable', function() {
         criteria.pattern.applies({pattern: /^test/}).should.be.ok;
       });
+
+      it('returns items that match a pattern', function() {
+        var itemsList = [
+            'example.txt',
+            'README.md',
+            'file20141231013000.txt',
+            'file20150101023000.txt'
+          ];
+        var items = rotatelib.list({items: itemsList, pattern: /^file/})
+        items.should.have.length(2);
+        items.should.containEql('file20141231013000.txt');
+      });
     });
 
     describe('year', function() {
