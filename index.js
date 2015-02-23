@@ -1,5 +1,6 @@
 var extend = require('extend'),
   criteria = require('./lib/criteria.js'),
+  filters = require('./lib/filters.js'),
   handlers = require('./lib/handlers.js');
 
 var rotatelib = {
@@ -26,6 +27,22 @@ var rotatelib = {
     return criteriaItems;
   },
 
+  /**
+   * Figure out the applicable filters for this request.
+   */
+  getApplicableFilters: function(params) {
+    var filterItems = [];
+    for (var filter in filters) {
+      if (filter.substr(0, 1) !== '_' && filters.hasOwnProperty(filter)) {
+        var filterItem = filters[filter];
+        if (filterItem.applies(params)) {
+          filterItems.push(filterItem);
+        }
+      }
+    }
+    return filterItems;
+  },
+
   getHandler: function(params) {
     for (var handler in handlers) {
       if (handlers.hasOwnProperty(handler)) {
@@ -43,7 +60,8 @@ var rotatelib = {
   list: function(params) {
     var items = [],
       self = this,
-      applyCriteria = rotatelib.getApplicableCriteria(params);
+      applyCriteria = rotatelib.getApplicableCriteria(params),
+      applyFilters = rotatelib.getApplicableFilters(params);
 
     // list items from the items param
     if (params.hasOwnProperty('items')) {
@@ -53,9 +71,15 @@ var rotatelib = {
         }
       });
 
+      if (applyFilters) {
+        applyFilters.forEach(function(filter) {
+          items = filter.filter(items, params);
+        });
+      }
       return items;
     }
 
+    // this is handled elsewhere
     var handler = rotatelib.getHandler(params);
     if (handler) {
       handler.rotatelib = this;
