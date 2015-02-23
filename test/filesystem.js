@@ -104,8 +104,7 @@ describe('FilesystemHandler', function() {
     it('remove files', function(done) {
       var params = {
         directory: testDirectory,
-        has_date: true,
-        test: true
+        has_date: true
       };
 
       // i think the problem is that the event is finished before the event
