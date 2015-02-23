@@ -19,6 +19,8 @@ rotatelib
   });
 ```
 
+Primarily, the library helps you list items you may want to act on based on date information in filenames and provides basic actions like removing those items. The commands use promises (via Q) to handle those actions that may be asynchronous.
+
 ## Criteria
 
 A list of criteria that can be applied.
@@ -33,15 +35,15 @@ A list of criteria that can be applied.
 - `has_date` (true/false) **implemented**
 - `hour` (int or array of ints) **implemented**
 - `startswith` (string or array of strings) **implemented**
-- `pattern` (regex)
+- `pattern` (regex) **implemented**
 - `year` (int or array of ints) **implemented**
 
 ## Filters
 
 Similar to criteria except they can act on the entire set. Current filters:
 
-- except_first ('day' or 'month')
-- except_last ('day' or 'month')
+- except_first ('day' or 'month') **implemented**
+- except_last ('day' or 'month') **implemented**
 
 For example, if you want all the items older than 5 days, but keep the first item per day:
 
