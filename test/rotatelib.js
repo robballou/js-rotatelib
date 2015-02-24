@@ -58,6 +58,26 @@ describe('rotatelib', function() {
         items.should.containEql('file20141231.txt');
         items.should.containEql('file20150101.txt');
       });
+
+      it('works with relative date', function() {
+        var today = moment(),
+          yesterday = moment().subtract(1, 'day'),
+          twoDaysAgo = moment().subtract(2, 'days');
+        var items = [
+            'example.txt',
+            'README.md',
+            'file' + today.format('YYYYMMDD') + '.txt',
+            'file' + yesterday.format('YYYYMMDD') + '.txt',
+            'file' + twoDaysAgo.format('YYYYMMDD') + '.txt'
+          ],
+          rotateItems = rotatelib.list({
+          'items': items,
+          after: '-1 day'
+        });
+
+        rotateItems.should.have.length(1);
+        rotateItems.should.containEql('file' + today.format('YYYYMMDD') + '.txt');
+      });
     });
 
     describe('before', function() {
