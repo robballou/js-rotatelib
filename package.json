@@ -1,7 +1,7 @@
 {
   "name": "js-rotatelib",
   "repository": "git@github.com:robballou/js-rotatelib.git",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "JS port of rotatelib",
   "main": "index.js",
   "scripts": {
