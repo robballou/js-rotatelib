@@ -18,8 +18,12 @@
   "dependencies": {
     "aws-sdk": "^2.1.8",
     "extend": "^2.0.0",
+    "minimist": "^1.1.0",
     "moment": "^2.9.0",
     "q": "^1.1.2",
     "require-dir": "^0.1.0"
+  },
+  "bin": {
+    "rotatelib": "command.js"
   }
 }
