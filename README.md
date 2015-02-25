@@ -34,6 +34,7 @@ A list of criteria that can be applied.
 - `except_year` (int or array of ints): return items that not in a given year **implemented**
 - `has_date` (true/false): return only items with dates. Any date based criteria will automatically add this criteria. **implemented**
 - `hour` (int or array of ints): return items only from a given hour **implemented**
+- `is_archive` (true/false): return items that are archived **implemented**
 - `startswith` (string or array of strings): return items that start with a string **implemented**
 - `pattern` (regex): return items that match a Regular Expression **implemented**
 - `year` (int or array of ints): return items in a given year **implemented**

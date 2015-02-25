@@ -343,6 +343,24 @@ describe('rotatelib', function() {
       });
     });
 
+    describe('is_archive', function() {
+      it('is applicable', function() {
+        criteria.is_archive.applies({is_archive: true}).should.be.ok;
+      });
+
+      it('returns items that are archives', function() {
+        var itemsList = [
+            'example.txt',
+            'README.md',
+            'file20141231013000.gz',
+            'file20150101023000.txt'
+          ];
+        var items = rotatelib.list({items: itemsList, is_archive: true})
+        items.should.have.length(1);
+        items.should.containEql('file20141231013000.gz');
+      });
+    });
+
     describe('startswith', function() {
       it('is applicable', function() {
         criteria.startswith.applies({startswith: 'test'}).should.be.ok;
