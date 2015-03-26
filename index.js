@@ -43,6 +43,9 @@ var rotatelib = {
     return filterItems;
   },
 
+  /**
+   * Figure out what handler to use
+   */
   getHandler: function(params) {
     for (var handler in handlers) {
       if (handlers.hasOwnProperty(handler)) {
@@ -58,10 +61,10 @@ var rotatelib = {
    * List out items that match the criteria.
    */
   list: function(params) {
-    var items = [],
-      self = this,
-      applyCriteria = rotatelib.getApplicableCriteria(params),
-      applyFilters = rotatelib.getApplicableFilters(params);
+    var items = [];
+    var self = this;
+    var applyCriteria = rotatelib.getApplicableCriteria(params);
+    var applyFilters = rotatelib.getApplicableFilters(params);
 
     // list items from the items param
     if (params.hasOwnProperty('items')) {
@@ -85,6 +88,8 @@ var rotatelib = {
       handler.rotatelib = this;
       return handler.list(params);
     }
+
+    return items;
   },
 
   /**

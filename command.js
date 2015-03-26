@@ -1,28 +1,64 @@
 #!/usr/bin/env node
-var argv = require('minimist')(process.argv.slice(2)),
-  path = require('path'),
-  rotatelib = require('./index.js')
+var program = require('commander');
+var path = require('path');
+var rotatelib = require('./index.js');
+var filters = require('./lib/filters.js');
+var criteria = require('./lib/criteria.js');
 
-var params = {};
+function camelcase(flag) {
+  return flag.split('-').reduce(function(str, word) {
+    return str + word[0].toUpperCase() + word.slice(1);
+  });
+}
 
-for (var property in argv) {
-  if (property.substr(0, 1) !== '_') {
-    var new_property = property.replace('-', '_');
-    params[new_property] = argv[property];
+program.version('0.0.1');
+
+var items = {};
+
+// register criteria options
+for (var criteriaItem in criteria) {
+  if (criteria.hasOwnProperty(criteriaItem) && criteriaItem[0] != '_' && criteriaItem != 'default') {
+    if (typeof criteria[criteriaItem].option === 'function') {
+      criteria[criteriaItem].option(program);
+      items[camelcase(criteriaItem.replace('_', '-'))] = criteriaItem;
+    }
   }
 }
 
-if (argv._.length) {
-  params.directory = argv._.shift();
-}
-else {
-  console.log('No directory specified');
-  process.exit(1);
+// register filter options
+for (var filterItem in filters) {
+  if (filters.hasOwnProperty(filterItem) && filterItem[0] != '_' && filterItem != 'default') {
+    if (typeof filters[filterItem].option === 'function') {
+      filters[filterItem].option(program);
+      items[camelcase(filterItem.replace('_', '-'))] = filterItem;
+    }
+  }
 }
 
+// actions
+program
+  .option('--remove', 'Remove matched items');
+
+program.parse(process.argv);
+
+var params = {
+  directory: program.args[0]
+};
+
+for (var item in items) {
+  if (items.hasOwnProperty(item)) {
+    if (program.hasOwnProperty(item)) {
+      params[items[item]] = program[item];
+    }
+  }
+}
 rotatelib
   .list(params)
   .then(function(items) {
+    if (program.remove) {
+      rotatelib.removeItems(items, params);
+      return;
+    }
     items.forEach(function(item) {
       console.log(path.join(params.directory, item));
     });
