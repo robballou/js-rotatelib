@@ -38,7 +38,7 @@ for (var filterItem in filters) {
 
 // actions
 program
-  .option('--remove', 'Remove matched items')
+  .option('--remove', 'Remove matched items, prompts by default')
   .option('--no-prompt', 'Do not prompt, assume yes', false);
 
 program.parse(process.argv);
