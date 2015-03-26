@@ -20,6 +20,9 @@ var rotatelib = {
       if (criteria.hasOwnProperty(property) && property.substr(0, 1) !== '_') {
         var criteriaItem = criteria[property];
         if (criteriaItem.applies(params)) {
+          if (params.debug) {
+            console.log(property);
+          }
           criteriaItems.push(criteriaItem);
         }
       }
@@ -66,10 +69,17 @@ var rotatelib = {
     var applyCriteria = rotatelib.getApplicableCriteria(params);
     var applyFilters = rotatelib.getApplicableFilters(params);
 
+    if (typeof params.debug === 'undefined') {
+      params.debug = false;
+    }
+
     // list items from the items param
     if (params.hasOwnProperty('items')) {
       params.items.forEach(function(item) {
         if (rotatelib.matchesCriteria(item, params, applyCriteria)) {
+          if (params.debug) {
+            console.log(item);
+          }
           items.push(item);
         }
       });
@@ -105,13 +115,16 @@ var rotatelib = {
    */
   matchesCriteria: function(item, params, criteria) {
     if (criteria.length === 0) {
-      console.log('no criteria');
+      if (params.debug) {
+        console.log('no criteria');
+      }
       return false;
     }
 
-    for (var i=0, count=criteria.length; i<count; i++) {
+    for (var i = 0, count = criteria.length; i < count; i++) {
       var result = criteria[i].matches(item, params);
-      if (result === 0) {
+      if (!result) {
+        // stop right now
         return false;
       }
     }

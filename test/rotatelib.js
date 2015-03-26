@@ -351,13 +351,27 @@ describe('rotatelib', function() {
       it('returns items that are archives', function() {
         var itemsList = [
             'example.txt',
+            'example.zip',
             'README.md',
             'file20141231013000.gz',
             'file20150101023000.txt'
           ];
-        var items = rotatelib.list({items: itemsList, is_archive: true})
+        var items = rotatelib.list({items: itemsList, has_date: true, is_archive: true});
         items.should.have.length(1);
         items.should.containEql('file20141231013000.gz');
+      });
+
+      it('returns items that are not archives', function() {
+        var itemsList = [
+            'example.txt',
+            'example.zip',
+            'README.md',
+            'file20141231013000.gz',
+            'file20150101023000.txt'
+          ];
+        var items = rotatelib.list({items: itemsList, has_date: true, is_archive: false});
+        items.should.have.length(1);
+        items.should.containEql('file20150101023000.txt');
       });
     });
 

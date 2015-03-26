@@ -34,7 +34,7 @@ A list of criteria that can be applied.
 - `except_year` (int or array of ints): return items that not in a given year **implemented**
 - `has_date` (true/false): return only items with dates. Any date based criteria will automatically add this criteria. **implemented**
 - `hour` (int or array of ints): return items only from a given hour **implemented**
-- `is_archive` (true/false): return items that are archived **implemented**
+- `is_archive` (true/false): return items that are archived (true=items are archives, false=items are not) **implemented**
 - `startswith` (string or array of strings): return items that start with a string **implemented**
 - `pattern` (regex): return items that match a Regular Expression **implemented**
 - `year` (int or array of ints): return items in a given year **implemented**
@@ -65,6 +65,50 @@ rotatelib.list({
   except_first: 'day'
 })
 ```
+
+## Command line
+
+The command line allows you to access rotatelib functionality via CLI.
+
+```
+Usage: rotatelib [options]
+
+Options:
+
+  -h, --help                    output usage information
+  -V, --version                 output the version number
+  --after <date>                Select items after the given date
+  --before <date>               Select items before the given date
+  --day <day>                   Select items that occur on a day of the month
+  --except-day <day>            Select items that do not occur on a day of the month
+  --has-date                    Select items that have a parseable date
+  --hour <hour>                 Select items that occur in an hour
+  --is-archive                  The item is an archive
+  --except-hour <hour>          Select items that do not occur in a given hour
+  --startswith <string>         Select items that start with this string
+  --except-startswith <string>  Select items that do not start with this string
+  --year <year>                 Select items that occur in a year
+  --except-year <year>          Select items that do not start with this string
+  --pattern <pattern>           Select items that match a pttern
+  --except-first <day|month>    Exclude the first item on a day or a month
+  --except-last <day|month>     Exclude the last item on a day or a month
+  --remove                      Remove matched items
+  --no-prompt                   Do not prompt, assume yes
+```
+
+Example 1: List items before a day:
+
+    rotatelib --before 2015-01-01 ~/backups
+
+Example 2: Remove items before 1/1, except the last item per month:
+
+    rotatelib --before 2015-01-01 --except-last month ~/backups --remove
+
+By default, `--remove` will prompt to confirm, but you can disable that with `--no-prompt`.
+
+Example 3: Use `xargs` to do other things with items like gzipping files:
+
+    rotatelib --before 2015-01-01 --startswith db ~/backups | xargs gzip
 
 ## Project Goals
 

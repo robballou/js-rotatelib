@@ -4,6 +4,7 @@ var path = require('path');
 var rotatelib = require('./index.js');
 var filters = require('./lib/filters.js');
 var criteria = require('./lib/criteria.js');
+var inquirer = require('inquirer');
 
 function camelcase(flag) {
   return flag.split('-').reduce(function(str, word) {
@@ -19,8 +20,8 @@ var items = {};
 for (var criteriaItem in criteria) {
   if (criteria.hasOwnProperty(criteriaItem) && criteriaItem[0] != '_' && criteriaItem != 'default') {
     if (typeof criteria[criteriaItem].option === 'function') {
-      criteria[criteriaItem].option(program);
-      items[camelcase(criteriaItem.replace('_', '-'))] = criteriaItem;
+      var option = criteria[criteriaItem].option(program);
+      items[option] = criteriaItem;
     }
   }
 }
@@ -29,22 +30,26 @@ for (var criteriaItem in criteria) {
 for (var filterItem in filters) {
   if (filters.hasOwnProperty(filterItem) && filterItem[0] != '_' && filterItem != 'default') {
     if (typeof filters[filterItem].option === 'function') {
-      filters[filterItem].option(program);
-      items[camelcase(filterItem.replace('_', '-'))] = filterItem;
+      var option = filters[filterItem].option(program);
+      items[option] = filterItem;
     }
   }
 }
 
 // actions
 program
-  .option('--remove', 'Remove matched items');
+  .option('--remove', 'Remove matched items')
+  .option('--no-prompt', 'Do not prompt, assume yes', false);
 
 program.parse(process.argv);
+if (program.args.length != 1) {
+  program.outputHelp();
+  return;
+}
 
 var params = {
   directory: program.args[0]
 };
-
 for (var item in items) {
   if (items.hasOwnProperty(item)) {
     if (program.hasOwnProperty(item)) {
@@ -56,9 +61,33 @@ rotatelib
   .list(params)
   .then(function(items) {
     if (program.remove) {
-      rotatelib.removeItems(items, params);
+      if (items.length === 0 && program.prompt) {
+        console.log('No items matched, nothing removed');
+        return;
+      }
+
+      if (!program.prompt) {
+        rotatelib.removeItems(items, params);
+        return;
+      }
+      console.log('Matched items:');
+      console.log(items.join('\n'));
+      inquirer.prompt({
+        name: 'confirm',
+        type: 'confirm',
+        message: 'Do you want to remove these items?'
+      }, function(input) {
+        if (input.confirm) {
+          rotatelib.removeItems(items, params);
+        }
+        else {
+          console.log('No items removed');
+        }
+      });
       return;
     }
+
+    // list out the items
     items.forEach(function(item) {
       console.log(path.join(params.directory, item));
     });
