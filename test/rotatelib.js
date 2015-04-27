@@ -285,7 +285,8 @@ describe('rotatelib', function() {
         {string: 'test-2009-06-29T1430-0700.bz2', answer: '2009-06-29 14:30:00', format: 'YYYY-MM-DD HH:mm:ss'},
         {string: 'test-2009-06-29T14-0700.bz2', answer: '2009-06-29 14:00:00', format: 'YYYY-MM-DD HH:mm:ss'},
         {string: 'test-20090629.bz2', answer: '2009-06-29'},
-        {string: 'test-200906290130.bz2', answer: '2009-06-29 01:30:00', format: 'YYYY-MM-DD HH:mm:ss'}
+        {string: 'test-200906290130.bz2', answer: '2009-06-29 01:30:00', format: 'YYYY-MM-DD HH:mm:ss'},
+        {string: 'test-2015-04-20T12-00-00_UTC_database.sql', answer: '2015-04-20 00:00:00', format: 'YYYY-MM-DD HH:mm:ss'}
       ];
 
       validDates.forEach(function(date) {
