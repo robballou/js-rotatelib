@@ -484,8 +484,8 @@ describe('rotatelib', function() {
         ];
 
         var rotateItems = rotatelib.list({'items': items, except_first: 'month'});
-        rotateItems.should.have.length(2);
-        rotateItems.should.containEql('file20141201.txt');
+        rotateItems.should.have.length(1);
+        rotateItems.should.containEql('file20141231.txt');
       });
 
       it('filters out items by day', function() {
@@ -503,10 +503,8 @@ describe('rotatelib', function() {
         ];
 
         var rotateItems = rotatelib.list({'items': items, except_first: 'day'});
-        rotateItems.should.have.length(3);
-        rotateItems.should.containEql('file20141201013000.txt');
-        rotateItems.should.containEql('file20141231013000.txt');
-        rotateItems.should.containEql('file20150101013000.txt');
+        rotateItems.should.have.length(1);
+        rotateItems.should.containEql('file20141201023000.txt');
       });
     });
 
@@ -525,8 +523,8 @@ describe('rotatelib', function() {
         ];
 
         var rotateItems = rotatelib.list({'items': items, except_last: 'month'});
-        rotateItems.should.have.length(2);
-        rotateItems.should.containEql('file20141231.txt');
+        rotateItems.should.have.length(1);
+        rotateItems.should.containEql('file20141201.txt');
       });
 
       it('filters out items by day', function() {
@@ -544,10 +542,8 @@ describe('rotatelib', function() {
         ];
 
         var rotateItems = rotatelib.list({'items': items, except_last: 'day'});
-        rotateItems.should.have.length(3);
-        rotateItems.should.containEql('file20141201023000.txt');
-        rotateItems.should.containEql('file20141231013000.txt');
-        rotateItems.should.containEql('file20150101013000.txt');
+        rotateItems.should.have.length(1);
+        rotateItems.should.containEql('file20141201013000.txt');
       });
     });
   });
