@@ -1,94 +1,101 @@
 #!/usr/bin/env node
-var program = require('commander');
-var path = require('path');
-var rotatelib = require('./index.js');
-var filters = require('./lib/filters.js');
-var criteria = require('./lib/criteria.js');
-var inquirer = require('inquirer');
 
+import inquirer from 'inquirer';
+import path from 'path';
+
+import program from 'commander';
+
+import { Rotatelib } from './index.js';
+
+import { criteria } from './lib/criteria.mjs';
+import { filters } from './lib/filters.mjs';
+
+/**
+ * Camelcase a string
+ * @param {string} flag
+ */
 function camelcase(flag) {
-  return flag.split('-').reduce(function(str, word) {
-    return str + word[0].toUpperCase() + word.slice(1);
-  });
+    return flag.split('-').reduce((str, word) => str + word[0].toUpperCase() + word.slice(1));
 }
 
 program.version('0.0.1');
 
 var items = {};
+const rotatelib = new Rotatelib();
 
 // register criteria options
 for (var criteriaItem in criteria) {
-  if (criteria.hasOwnProperty(criteriaItem) && criteriaItem[0] != '_' && criteriaItem != 'default') {
-    if (typeof criteria[criteriaItem].option === 'function') {
-      var option = criteria[criteriaItem].option(program);
-      items[option] = criteriaItem;
+    if (Object.prototype.hasOwnProperty.call(criteria, criteriaItem) && criteriaItem[0] != '_' && criteriaItem != 'default') {
+        if (typeof criteria[criteriaItem].option === 'function') {
+            const option = criteria[criteriaItem].option(program);
+            items[option] = criteriaItem;
+        }
     }
-  }
 }
 
 // register filter options
 for (var filterItem in filters) {
-  if (filters.hasOwnProperty(filterItem) && filterItem[0] != '_' && filterItem != 'default') {
-    if (typeof filters[filterItem].option === 'function') {
-      var option = filters[filterItem].option(program);
-      items[option] = filterItem;
+    if (Object.prototype.hasOwnProperty.call(filters, filterItem) && filterItem[0] != '_' && filterItem != 'default') {
+        if (typeof filters[filterItem].option === 'function') {
+            var option = filters[filterItem].option(program);
+            items[option] = filterItem;
+        }
     }
-  }
 }
 
 // actions
 program
-  .option('--remove', 'Remove matched items, prompts by default')
-  .option('--no-prompt', 'Do not prompt, assume yes', false);
+    .option('--remove', 'Remove matched items, prompts by default')
+    .option('--no-prompt', 'Do not prompt, assume yes', false);
 
 program.parse(process.argv);
 if (program.args.length != 1) {
-  program.outputHelp();
-  return;
+    program.outputHelp();
+    process.exit(1);
 }
 
 var params = {
-  directory: program.args[0]
+    directory: program.args[0],
 };
 for (var item in items) {
-  if (items.hasOwnProperty(item)) {
-    if (program.hasOwnProperty(item)) {
-      params[items[item]] = program[item];
+    if (Object.prototype.hasOwnProperty.call(items, item)) {
+        if (Object.prototype.hasOwnProperty.call(program, item)) {
+            params[items[item]] = program[item];
+        }
     }
-  }
 }
-rotatelib
-  .list(params)
-  .then(function(items) {
-    if (program.remove) {
-      if (items.length === 0 && program.prompt) {
-        console.log('No items matched, nothing removed');
-        return;
-      }
 
-      if (!program.prompt) {
-        rotatelib.removeItems(items, params);
-        return;
-      }
-      console.log('Matched items:');
-      console.log(items.join('\n'));
-      inquirer.prompt({
-        name: 'confirm',
-        type: 'confirm',
-        message: 'Do you want to remove these items?'
-      }, function(input) {
-        if (input.confirm) {
-          rotatelib.removeItems(items, params);
-        }
-        else {
-          console.log('No items removed');
-        }
-      });
-      return;
-    }
+rotatelib.list(params)
+    .then((rotateItems) => {
+        if (program.remove) {
+            if (rotateItems.length === 0 && program.prompt) {
+                console.log('No items matched, nothing removed');
+                return;
+            }
 
-    // list out the items
-    items.forEach(function(item) {
-      console.log(path.join(params.directory, item));
+            if (!program.prompt) {
+                rotatelib.removeItems(rotateItems, params);
+                return;
+            }
+            console.log('Matched items:');
+            console.log(rotateItems.join('\n'));
+            inquirer.prompt({
+                name: 'confirm',
+                type: 'confirm',
+                message: 'Do you want to remove these items?',
+            }, (input) => {
+                if (input.confirm) {
+                    rotatelib.removeItems(rotateItems, params);
+                }
+                else {
+                    console.log('No items removed');
+                }
+            });
+            return;
+        }
+
+        // list out the items
+        items.forEach((rotateItem) => {
+            console.log(path.join(params.directory, rotateItem));
+        });
     });
-  });
