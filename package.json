@@ -5,7 +5,8 @@
     "description": "JS port of rotatelib",
     "main": "index.js",
     "scripts": {
-        "test": "mocha test/*.mjs"
+        "test": "mocha test/*.mjs",
+        "lint": "eslint **/*.mjs **/*.js"
     },
     "author": "Rob Ballou",
     "license": "ISC",

@@ -8,7 +8,9 @@ import { filters } from './lib/filters.mjs';
 import { handlers } from './lib/handlers.mjs';
 
 export class Rotatelib {
-    debug = debug('rotatelib');
+    constructor() {
+        this.debug = debug('rotatelib');
+    }
 
     /**
     * Add a new criteria item.

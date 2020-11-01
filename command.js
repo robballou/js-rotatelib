@@ -10,17 +10,9 @@ import { Rotatelib } from './index.js';
 import { criteria } from './lib/criteria.mjs';
 import { filters } from './lib/filters.mjs';
 
-/**
- * Camelcase a string
- * @param {string} flag
- */
-function camelcase(flag) {
-    return flag.split('-').reduce((str, word) => str + word[0].toUpperCase() + word.slice(1));
-}
-
 program.version('0.0.1');
 
-var items = {};
+const items = {};
 const rotatelib = new Rotatelib();
 
 // register criteria options

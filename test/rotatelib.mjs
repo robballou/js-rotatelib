@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import chai from 'chai';
 import moment from 'moment';
 
@@ -335,10 +336,9 @@ describe('rotatelib', () => {
                     parsed.should.be.an('object');
                     parsed.date.isValid().should.be.ok;
 
-                    var format = 'YYYY-MM-DD';
-                    if (date.hasOwnProperty('format')) {
-                        format = date.format;
-                    }
+                    const format = Object.prototype.hasOwnProperty.call(date, 'format')
+                        ? date.format
+                        : 'YYYY-MM-DD';
                     parsed.date.format(format).should.equal(date.answer);
                 });
             });

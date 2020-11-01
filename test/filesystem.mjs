@@ -56,7 +56,6 @@ describe('FilesystemHandler', () => {
         });
 
         it('returns files in directory', async () => {
-            fs.existsSync(path.join(directory, 'test.txt')).should.be.ok;
             const items = await rotatelib.list({
                 directory,
             })
@@ -64,7 +63,6 @@ describe('FilesystemHandler', () => {
         });
 
         it('uses criteria', async () => {
-            fs.existsSync(path.join(directory, 'test.txt')).should.be.ok;
             const items = await rotatelib.list({
                 directory,
                 has_date: true,
