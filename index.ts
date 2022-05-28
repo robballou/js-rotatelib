@@ -1,18 +1,26 @@
 import filters from './lib/filters';
 import handlers from './lib/handlers';
 import { Criteria } from './lib/criteria';
-import type { Params, RotatelibConfig } from './types';
+import type { Params, RotatelibConfig, ListItem } from './types';
 import { enableDebug } from './lib/enableDebug';
 import Debug from 'debug';
+import type { HandlerBase } from './lib/handlers/HandlerBase';
+import { ItemsHandler } from './lib/handlers/ItemsHandler';
 
 export class Rotatelib {
   debug = Debug('rotatelib');
   protected criteria: Criteria;
   filters: Record<string, unknown> = {};
-  handlers: Record<string, unknown> = {};
+  handlers: HandlerBase[] = [];
 
   constructor(config: RotatelibConfig = {}) {
     this.criteria = config.criteria ?? new Criteria(config.criteriaConfig);
+    if (config.handlers) {
+      config.handlers.forEach((handler) => this.addHandler(handler));
+    }
+    else {
+      this.addHandler(new ItemsHandler());
+    }
   }
 
   /**
@@ -20,6 +28,11 @@ export class Rotatelib {
    */
   addCriteria(key: string, obj: unknown) {
     // this.criteria[key] = obj;
+  }
+
+  addHandler(handler: HandlerBase): this {
+    this.handlers.push(handler);
+    return this;
   }
 
   /**
@@ -58,32 +71,21 @@ export class Rotatelib {
    * Figure out what handler to use
    */
   getHandler(params: Partial<Params>) {
-    // for (const handler in this.handlers) {
-    //   if (Object.hasOwnProperty.call(this.handlers, handler)) {
-    //     const thisHandler = this.handlers[handler];
-    //     if (thisHandler.applies(params)) {
-    //       return thisHandler;
-    //     }
-    //   }
-    // }
+    for (const handler in this.handlers) {
+      if (Object.hasOwnProperty.call(this.handlers, handler)) {
+        const thisHandler = this.handlers[handler];
+        if (thisHandler.applies(params)) {
+          return thisHandler;
+        }
+      }
+    }
   }
 
   /**
    * List out items that match the criteria.
    */
   list(params: Partial<Params>) {
-    const items: string[] = [];
-
     enableDebug(params);
-
-    if (params.items) {
-      params.items.forEach((item) => {
-        if (this.matchesCriteria(item, params)) {
-          this.debug(`Matched ${item}`);
-          items.push(item);
-        }
-      });
-    }
 
     // if (typeof params.debug === 'undefined') {
     //   params.debug = false;
@@ -109,12 +111,17 @@ export class Rotatelib {
     // }
 
     // // this is handled elsewhere
-    // const handler = this.getHandler(params);
-    // if (handler) {
-    //   handler.rotatelib = this;
-    //   return handler.list(params);
-    // }
+    const handler = this.getHandler(params);
 
+    if (!handler) {
+      throw new Error('Could not find a item handler that applies for this set of params');
+    }
+
+    const rawItems = handler.list(params);
+
+    this.debug(`Found ${rawItems.length} item${rawItems.length !== 1 ? 's' : ''}. Filtering...`);
+    const items = rawItems.filter(this.matchesCriteria(params));
+    this.debug(`Filtered down to ${items.length}`);
     return items;
   }
 
@@ -129,8 +136,11 @@ export class Rotatelib {
   /**
    * Check if the item matches the criteria.
    */
-  matchesCriteria(item: string, params: Partial<Params>) {
-    return this.criteria.test(params, item);
+  matchesCriteria(params: Partial<Params>) {
+    return (item: string|ListItem) => {
+      const testString = (typeof item !== 'string') ? item.toString() : item;
+      return this.criteria.test(params, testString);
+    };
   }
 
   /**

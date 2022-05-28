@@ -1,4 +1,5 @@
 import type { Criteria } from './lib/criteria';
+import type { HandlerBase } from './lib/handlers/HandlerBase';
 
 export type CriteriaConfig = {
   archiveTypes: string[];
@@ -7,7 +8,12 @@ export type CriteriaConfig = {
 export type RotatelibConfig = Partial<{
   criteriaConfig: CriteriaConfig,
   criteria: Criteria,
+  handlers: HandlerBase[],
 }>;
+
+export type ListItem = {
+  toString(): string;
+}
 
 // export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export type WithRequired<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> & Required<Pick<T, K>>
@@ -39,6 +45,6 @@ export type FilterName = keyof Filters;
 
 export type Params = Partial<Criterion> & Partial<Filters> & Partial<{
   directory: string;
-  items: any[];
+  items: (string|ListItem)[];
   debug: boolean;
 }>;
