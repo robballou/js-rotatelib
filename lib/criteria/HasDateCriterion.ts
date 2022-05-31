@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
 import { CriterionBase } from './CriterionBase';
-import type { CriterionName } from '../../types';
+import type { Criterion } from '../../types';
 import { dateService } from '../services/DateService';
 
-type HasDateParams = Record<CriterionName, unknown>;
+type HasDateParams = Pick<Criterion, 'hasDate'>;
 
 export class HasDateCriterion extends CriterionBase {
   testItem(params: HasDateParams, item: string): boolean {

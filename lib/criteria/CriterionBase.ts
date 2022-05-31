@@ -1,3 +1,4 @@
+import { Params } from '../../types';
 import type { Criteria } from '../criteria';
 
 export abstract class CriterionBase {
@@ -14,9 +15,9 @@ export abstract class CriterionBase {
     return false;
   }
 
-  abstract testItem(params: Record<string, unknown>, item: string): boolean;
+  abstract testItem(params: Params, item: string): boolean;
 
-  testItemInverse(params: Record<string, unknown>, item: string): boolean {
-    return false;
+  testItemInverse(params: Params, item: string): boolean {
+    return !this.testItem(params, item);
   }
 }

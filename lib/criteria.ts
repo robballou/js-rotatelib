@@ -24,6 +24,12 @@ export class Criteria {
    * Internal map of a criterion name to it's concrete Criterion implementation.
    */
   protected criteria: Record<NormalCriterionName, CriterionBase>;
+
+  /**
+   * Map of "inverse" criteria (ex, exceptDay)
+   *
+   * Used to match an inverse criteria to it's implementation.
+   */
   protected inverseCriteriaMap: Record<Exclude<CriterionName, NormalCriterionName>, NormalCriterionName>;
 
   constructor(config: Partial<CriteriaConfig> = {}) {

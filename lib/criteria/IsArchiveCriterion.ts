@@ -1,8 +1,8 @@
 import { CriterionBase } from './CriterionBase';
-import type { CriteriaConfig, CriterionName } from '../../types';
+import type { CriteriaConfig, Criterion } from '../../types';
 import { Criteria } from '../criteria';
 
-type IsArchiveParams = Record<CriterionName, unknown>;
+type IsArchiveParams = Pick<Criterion, 'isArchive'>;
 
 export class IsArchiveCriterion extends CriterionBase {
   protected archiveTypes = ['.gz',

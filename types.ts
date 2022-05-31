@@ -17,6 +17,7 @@ export type ListItem = {
 
 // export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export type WithRequired<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> & Required<Pick<T, K>>
+
 export type Criterion = {
   after: string;
   before: string;
@@ -44,7 +45,19 @@ export type Filters = {
 export type FilterName = keyof Filters;
 
 export type Params = Partial<Criterion> & Partial<Filters> & Partial<{
-  directory: string;
-  items: (string|ListItem)[];
   debug: boolean;
 }>;
+
+export type DirectoryParams = Params & {
+  directory: string;
+}
+
+export type ItemsParams = Params & {
+  items: string[];
+}
+
+export type ListParams = ItemsParams | DirectoryParams;
+
+export type FilesystemHandlerConfig = Partial<{
+  ignoreHiddenItems: boolean
+}>

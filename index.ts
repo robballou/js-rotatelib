@@ -1,7 +1,5 @@
-import filters from './lib/filters';
-import handlers from './lib/handlers';
 import { Criteria } from './lib/criteria';
-import type { Params, RotatelibConfig, ListItem } from './types';
+import type { Params, RotatelibConfig, ListItem, ListParams } from './types';
 import { enableDebug } from './lib/enableDebug';
 import Debug from 'debug';
 import type { HandlerBase } from './lib/handlers/HandlerBase';
@@ -30,6 +28,12 @@ export class Rotatelib {
     // this.criteria[key] = obj;
   }
 
+  /**
+   * Add a new item handler.
+   *
+   * Item handlers deal with various systems (filesystems, APIs) to determine
+   * what items exist and to perform actions on those items.
+   */
   addHandler(handler: HandlerBase): this {
     this.handlers.push(handler);
     return this;
@@ -84,40 +88,16 @@ export class Rotatelib {
   /**
    * List out items that match the criteria.
    */
-  list(params: Partial<Params>) {
+  async list(params: ListParams) {
     enableDebug(params);
 
-    // if (typeof params.debug === 'undefined') {
-    //   params.debug = false;
-    // }
-
-    // // list items from the items param
-    // if (params.items) {
-    //   params.items.forEach((item) => {
-    //     if (this.matchesCriteria(item, params, applyCriteria)) {
-    //       if (params.debug) {
-    //         console.log(item);
-    //       }
-    //       items.push(item);
-    //     }
-    //   });
-
-    //   if (applyFilters) {
-    //     applyFilters.forEach((filter) => {
-    //       items = filter.filter(items, params);
-    //     });
-    //   }
-    //   return items;
-    // }
-
-    // // this is handled elsewhere
     const handler = this.getHandler(params);
 
     if (!handler) {
       throw new Error('Could not find a item handler that applies for this set of params');
     }
 
-    const rawItems = handler.list(params);
+    const rawItems = await handler.list(params);
 
     this.debug(`Found ${rawItems.length} item${rawItems.length !== 1 ? 's' : ''}. Filtering...`);
     const items = rawItems.filter(this.matchesCriteria(params));
@@ -127,8 +107,10 @@ export class Rotatelib {
 
   /**
    * List archives.
+   *
+   * @deprecated Use list({ isArchive: true }) instead
    */
-  listArchives(params: Partial<Params>) {
+  async listArchives(params: ListParams) {
     params.pattern = /\.{gz,bz2,zip}$/;
     return this.list(params);
   }

@@ -1,12 +1,68 @@
-import { Params } from '../../types';
+import Debug from 'debug';
+import { normalize as normalizePath, join as joinPath } from 'path';
+import fs from 'fs/promises';
+import { DirectoryParams, FilesystemHandlerConfig } from '../../types';
 import { HandlerBase } from './HandlerBase';
 
 export class FilesystemHandler extends HandlerBase {
-  applies(params: Partial<Params>): boolean {
+  debug = Debug('rotatelib:FilesystemHandler');
+  options: Required<FilesystemHandlerConfig> = {
+    ignoreHiddenItems: true,
+  };
+
+  constructor(config: FilesystemHandlerConfig | null = null) {
+    super();
+    if (config) {
+      this.options = {
+        ...this.options,
+        ...config,
+      };
+    }
+  }
+
+  applies(params: Partial<DirectoryParams>): boolean {
     return 'directory' in params && !!params.directory;
   }
 
-  list(params: Partial<Params>): string[] {
-    return [];
+  /**
+   * Return all items in the directory
+   */
+  async list(params: DirectoryParams): Promise<string[]> {
+    if (!('directory' in params) || !params.directory) {
+      this.debug('No directory specified, skipping finding items');
+      return [];
+    }
+
+    const directory = normalizePath(params.directory);
+
+    return await this.readDirectory(directory);
+  }
+
+  /**
+   * Recursively read directories
+   */
+  async readDirectory(directory: string): Promise<string[]> {
+    const items: string[] = [];
+
+    try {
+      const itemsInDirectory = await fs.readdir(directory);
+      const promises: Promise<string[]>[] = [];
+      itemsInDirectory.forEach((item) => {
+        if ((this.options.ignoreHiddenItems && !item.startsWith('.')) || !this.options.ignoreHiddenItems) {
+          const itemPath = joinPath(directory, item);
+          items.push(itemPath);
+          promises.push(this.readDirectory(itemPath));
+        }
+      });
+      const children = await Promise.all(promises);
+      children
+        .filter((childItems) => childItems.length > 0)
+        .flat()
+        .forEach((item) => items.push(item));
+    } catch (error) {
+      this.debug('Could not read directory/item', directory);
+    }
+
+    return items;
   }
 }
