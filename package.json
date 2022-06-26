@@ -5,17 +5,17 @@
   "description": "JS port of rotatelib",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "jest"
   },
   "author": "Rob Ballou",
   "license": "ISC",
   "dependencies": {
     "@types/jest": "^27.5.1",
     "@types/luxon": "^2.3.2",
-    "aws-sdk": "^2.1140.0",
     "eslint-plugin-jest": "^26.2.2",
     "jest": "^28.1.0",
     "luxon": "^2.4.0",
+    "minimist": "^1.2.6",
     "typescript": "^4.6.4"
   },
   "bin": {
@@ -23,10 +23,12 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.7",
+    "@types/minimist": "^1.2.2",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
     "debug": "^4.3.4",
     "eslint": "^8.16.0",
-    "ts-jest": "^28.0.2"
+    "ts-jest": "^28.0.2",
+    "ts-node": "^10.8.1"
   }
 }
