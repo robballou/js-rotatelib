@@ -17,7 +17,6 @@ import { PatternCriterion } from './criteria/PatternCriterion';
 
 export class Criteria {
   debug = Debug('rotatelib:Criteria');
-  mixins = {};
   itemDatesParsed = new Map<string, DateTime|null>();
 
   /**

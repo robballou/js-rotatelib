@@ -1,9 +1,10 @@
 import { Criteria } from './lib/criteria';
-import type { Params, RotatelibConfig, ListItem, ListParams } from './types';
+import type { Params, RotatelibConfig, ListItem, ListParams, RotateItem } from './types';
 import { enableDebug } from './lib/enableDebug';
 import Debug from 'debug';
 import type { HandlerBase } from './lib/handlers/HandlerBase';
 import { ItemsHandler } from './lib/handlers/ItemsHandler';
+import { Filter } from './lib/filter';
 
 export class Rotatelib {
   debug = Debug('rotatelib');
@@ -100,7 +101,11 @@ export class Rotatelib {
     const rawItems = await handler.list(params);
 
     this.debug(`Found ${rawItems.length} item${rawItems.length !== 1 ? 's' : ''}. Filtering...`);
-    const items = rawItems.filter(this.matchesCriteria(params));
+    const items = this.filterItems(
+      rawItems.filter(this.matchesCriteria(params)),
+      params
+    );
+
     this.debug(`Filtered down to ${items.length}`);
     return items;
   }
@@ -123,6 +128,17 @@ export class Rotatelib {
       const testString = (typeof item !== 'string') ? item.toString() : item;
       return this.criteria.test(params, testString);
     };
+  }
+
+  filterItems(items: RotateItem[], params: Partial<Params>) {
+    // escape hatch for when we are not filtering items
+    if (!('exceptFirst' in params) && !('exceptLast' in params)) {
+      return items;
+    }
+
+    const filter = new Filter();
+    const filteredItems = filter.apply(params, items);
+    return filteredItems;
   }
 
   /**

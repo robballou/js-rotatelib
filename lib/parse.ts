@@ -2,10 +2,11 @@ import { DateTime } from 'luxon';
 import Debug from 'debug';
 
 const patterns = [
+  /^.*(?<date>\d{4}[-_.]?\d{2}[-_.]?\d{2}T?\d{2}:?\d{2}:?\d{2}).*$/i, // YYYYMMDDHHMMSS, YYYYMMDDTHHMMSS
+  /^.*(?<date>\d{4}[-_.]?\d{2}[-_.]?\d{2}T?\d{2}:?\d{2}).*$/i, // YYYYMMDDHHMMSS, YYYYMMDDTHHMMSS
   /^.*(?<date>\d{4}[-_.]?\d{2}[-_.]?\d{2}).*$/, // YYYYMMDD, YYYY-MM-DD
   /^.*(?<date>\d{4}-?\d{2}-?\d{2}T?\d{2}-\d{4}).*$/, // YYYYMMDDHH-ZONE, YYYYMMDDTHH-ZONE
   /^.*(?<date>\d{4}-?\d{2}-?\d{2}T?\d{2}:?\d{2}).*$/, // YYYYMMDDHHMM, YYYYMMDDTHHMM
-  /^.*(?<date>\d{4}\d{2}\d{2}T?\d{2}:?\d{2}:?\d{2}).*$/, // YYYYMMDDHHMMSS, YYYYMMDDTHHMMSS
 ];
 
 const formats = [

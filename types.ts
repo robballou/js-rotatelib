@@ -1,4 +1,5 @@
 import type { Criteria } from './lib/criteria';
+import type { DateTime } from 'luxon';
 import type { HandlerBase } from './lib/handlers/HandlerBase';
 
 export type CriteriaConfig = {
@@ -37,13 +38,17 @@ export type Criterion = {
 export type CriterionName = keyof Criterion;
 export type NormalCriterionName = Exclude<CriterionName, 'exceptDay' | 'exceptHour' | 'exceptStartsWith' | 'exceptYear'>;
 
+export type ExceptFilter = 'day' | 'month';
+
 export type Filters = {
-  exceptFirst: 'day' | 'month';
-  exceptLast: 'day' | 'month';
+  exceptFirst: ExceptFilter;
+  exceptLast: ExceptFilter;
 }
 
 export type FilterName = keyof Filters;
 
+export type RotateItem = string|ListItem;
+export type BucketItem = { item: RotateItem, itemDate: DateTime };
 export type Params = Partial<Criterion> & Partial<Filters> & Partial<{
   debug: boolean;
 }>;

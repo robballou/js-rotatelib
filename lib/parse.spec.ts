@@ -19,4 +19,13 @@ describe('parse', () => {
       expect(result?.toISOTime()).toEqual(expected.toISOTime());
     }
   });
+
+  test('Parsing uses time', () => {
+    const date1 = parseDateFromString('2022-06-26T08:22:00');
+    const date2 = parseDateFromString('2022-06-26T09:22:00');
+    if (date1 === null || date2 === null) {
+      throw new Error('Could not parse dates');
+    }
+    expect(date1 < date2).toBe(true);
+  });
 });
