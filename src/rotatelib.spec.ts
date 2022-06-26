@@ -1,4 +1,4 @@
-import { Rotatelib } from './index';
+import { Rotatelib } from './rotatelib';
 import { join as joinPath } from 'path';
 import { FilesystemHandler } from './lib/handlers/FilesystemHandler';
 
@@ -21,5 +21,11 @@ describe('Rotatelib', () => {
     r.addHandler(new FilesystemHandler({ ignoreHiddenItems: false }));
     const result = await r.list({ hasDate: true, directory: joinPath(__dirname, 'test/fixtures/filesystem1') });
     expect(result).toHaveLength(4);
+  });
+
+  test('list items in the filesystem filtered', async () => {
+    const r = new Rotatelib({ handlers: [new FilesystemHandler()]});
+    const result = await r.list({ exceptFirst: 'month', directory: joinPath(__dirname, 'test/fixtures/filesystem1') });
+    expect(result).toHaveLength(2);
   });
 });

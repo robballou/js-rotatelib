@@ -23,13 +23,6 @@ export class Rotatelib {
   }
 
   /**
-   * Add a new criteria item.
-   */
-  addCriteria(key: string, obj: unknown) {
-    // this.criteria[key] = obj;
-  }
-
-  /**
    * Add a new item handler.
    *
    * Item handlers deal with various systems (filesystems, APIs) to determine
@@ -38,38 +31,6 @@ export class Rotatelib {
   addHandler(handler: HandlerBase): this {
     this.handlers.push(handler);
     return this;
-  }
-
-  /**
-   * Figure out the applicable criteria items for this request.
-   */
-  getApplicableCriteria(params: Partial<Params>) {
-    const criteriaItems: any[] = [];
-    // for (const property in this.criteria) {
-    //   if (Object.hasOwnProperty.call(this.criteria, property) && property.substr(0, 1) !== '_') {
-    //     const criteriaItem = this.criteria[property];
-    //     if (criteriaItem.applies(params)) {
-    //       if (params.debug) {
-    //         console.log(property);
-    //       }
-    //       criteriaItems.push(criteriaItem);
-    //     }
-    //   }
-    // }
-    return criteriaItems;
-  }
-
-  getApplicableFilters(params: Partial<Params>): any[] {
-    const filterItems: any[] = [];
-    // for (const filter in this.filters) {
-    //   if (filter.substr(0, 1) !== '_' && Object.hasOwnProperty.call(this.filters, filter)) {
-    //     const filterItem = this.filters[filter];
-    //     if (filterItem.applies(params)) {
-    //       filterItems.push(filterItem);
-    //     }
-    //   }
-    // }
-    return filterItems;
   }
 
   /**
@@ -101,6 +62,8 @@ export class Rotatelib {
     const rawItems = await handler.list(params);
 
     this.debug(`Found ${rawItems.length} item${rawItems.length !== 1 ? 's' : ''}. Filtering...`);
+
+    // TODO: filters should be applied via the handler so it can differentiate between folders/etc
     const items = this.filterItems(
       rawItems.filter(this.matchesCriteria(params)),
       params
