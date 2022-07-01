@@ -1,16 +1,21 @@
-import { ListItem, ItemsParams } from '../../types';
+import { ListItem, ItemsParams, RotateItem } from '../../types';
 import { HandlerBase } from './HandlerBase';
 
 export class ItemsHandler extends HandlerBase {
-  applies(params: Partial<ItemsParams>): boolean {
-    return 'items' in params && Array.isArray(params.items);
-  }
+	async action(action: string, items: RotateItem[]): Promise<boolean> {
+		console.warn('The ItemsHandler has no supported actions', { action, items });
+		return true;
+	}
 
-  async list(params: ItemsParams): Promise<(string|ListItem)[]> {
-    if ('items' in params && params.items) {
-      return params.items;
-    }
+	applies(params: Partial<ItemsParams>): boolean {
+		return 'items' in params && Array.isArray(params.items);
+	}
 
-    return [];
-  }
+	async list(params: ItemsParams): Promise<(string|ListItem)[]> {
+		if ('items' in params && params.items) {
+			return params.items;
+		}
+
+		return [];
+	}
 }

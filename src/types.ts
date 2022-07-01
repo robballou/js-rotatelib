@@ -12,9 +12,11 @@ export type RotatelibConfig = Partial<{
   handlers: HandlerBase[],
 }>;
 
-export type ListItem = {
+export interface ListItem {
   toString(): string;
 }
+
+export type Action = 'remove' | 'move';
 
 // export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export type WithRequired<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> & Required<Pick<T, K>>
@@ -63,6 +65,14 @@ export type ItemsParams = Params & {
 
 export type ListParams = ItemsParams | DirectoryParams;
 
+export type OutputParams = {
+  output: 'json' | 'csv' | 'default';
+}
+
+export type CommandParams = Params & Partial<OutputParams>;
+
 export type FilesystemHandlerConfig = Partial<{
   ignoreHiddenItems: boolean
 }>
+
+export type FilesystemHandlerAction = 'remove';
