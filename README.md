@@ -2,21 +2,19 @@
 
 <img src="https://travis-ci.org/robballou/js-rotatelib.svg" alt="Build status" />
 
-This is a JavaScript port of [rotatelib](https://github.com/robballou/rotatelib). So alpha. Now working on a new [Typescript version](https://github.com/robballou/js-rotatelib/tree/main).
+This is a Typescript/JavaScript port of an ancient Python project: [rotatelib](https://github.com/robballou/rotatelib).
 
-```javascript
-var rotatelib = require('rotatelib');
+```typescript
+import { Rotatelib } from 'rotatelib';
 
 // list the files within 'backups' directory that are dated before 2014-01-01
-var params = {
+const params = {
   directory: 'backups',
   before: '2014-01-01'
 };
-rotatelib
+const items = await rotatelib
   .list(params)
-  .then(function(items) {
-    rotatelib.removeItems(items, params);
-  });
+await rotatelib.action('remove', items, params);
 ```
 
 Primarily, the library helps you list items you may want to act on based on date information in filenames and provides basic actions like removing those items. The commands use promises (via Q) to handle those actions that may be asynchronous.
