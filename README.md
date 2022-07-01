@@ -2,7 +2,7 @@
 
 <img src="https://travis-ci.org/robballou/js-rotatelib.svg" alt="Build status" />
 
-This is a JavaScript port of [rotatelib](https://github.com/robballou/rotatelib). So alpha. Now working on a new [Typescript version](/robballou/js-rotatelib/tree/main).
+This is a JavaScript port of [rotatelib](https://github.com/robballou/rotatelib). So alpha. Now working on a new [Typescript version](https://github.com/robballou/js-rotatelib/tree/main).
 
 ```javascript
 var rotatelib = require('rotatelib');
